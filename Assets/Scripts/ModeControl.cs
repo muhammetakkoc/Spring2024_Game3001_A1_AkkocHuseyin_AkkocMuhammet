@@ -103,8 +103,8 @@ public class PlayerMovement : MonoBehaviour
             mouse.z = 0f;
 
              Enemy.transform.position = mouse;
-            Vector3 Enemydirection =playerRigidBody.velocity;
-            Enemy.transform.right = Enemydirection;
+          Vector3 Enemydirection =playerRigidBody.velocity;
+            Enemy.transform.right = -Enemydirection;
 
             Vector2 currentVelocity = playerRigidBody.velocity;
             Vector2 desiredVelocity = (-mouse + transform.position).normalized * seekSpeed;
@@ -113,6 +113,10 @@ public class PlayerMovement : MonoBehaviour
             playerRigidBody.AddForce(seekForce);
             Vector3 direction = playerRigidBody.velocity;
             transform.right = direction;
+        }
+        else
+        {
+            Enemy.SetActive(false);
         }
 
         if (mode == Steering.ArrivalMode)
@@ -144,7 +148,7 @@ public class PlayerMovement : MonoBehaviour
         void ResetGame()
         {
             transform.position = new Vector3(10f,0f,0f);
-      
+             
            
             Enemy.transform.position=new Vector3(-5f,0f,0f);    
            
