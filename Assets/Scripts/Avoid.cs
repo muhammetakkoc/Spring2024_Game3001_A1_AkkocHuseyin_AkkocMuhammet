@@ -32,7 +32,7 @@ public class Avoid : MonoBehaviour
         float dt = Time.deltaTime;
         float distance = 10.0f;
 
-        Quaternion leftRotation = Quaternion.
+        //Quaternion leftRotation = Quaternion.
 
         Vector3 direction = transform.right;
         Vector3 left = Quaternion.Euler(0f, 0f,  probeAngel)*direction;
@@ -51,7 +51,7 @@ public class Avoid : MonoBehaviour
 
             Vector2 avoidPosition = transform.position + transform.up * 5f;
             rb.AddForce(SeekAvoid(rb, avoidPosition, speed));
-            Quaternion.RotateTowards(transform.rotation, Quaternion.)
+            //Quaternion.RotateTowards(transform.rotation, Quaternion.)
 
 
             transform.right = rb.velocity;
