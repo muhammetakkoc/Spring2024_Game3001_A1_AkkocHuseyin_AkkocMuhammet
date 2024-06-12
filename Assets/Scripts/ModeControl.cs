@@ -23,8 +23,10 @@ public class PlayerMovement : MonoBehaviour
     public GameObject MainMenuButton;
     Rigidbody2D playerRigidBody;
     [SerializeField] float seekSpeed;
+  
     public GameObject Enemy;
     float distance;
+    public GameObject fishingWorm;
 
     Rigidbody2D enemyRigidBody;
 
@@ -32,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     {
 
         Enemy.SetActive(false);
+        fishingWorm.SetActive(false);
         modeText.text = " Angular Seek";
 
         playerRigidBody = GetComponent<Rigidbody2D>();
@@ -74,9 +77,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Keypad3))
         {
-            Debug.Log("pressed 2,Arrival Mode");
+            Debug.Log("pressed 3,Arrival Mode");
             modeText.text = " ArrivalMode";
             mode = Steering.ArrivalMode;
+            fishingWorm.SetActive(true);
+            Enemy.SetActive(false);
+            fishingWorm.transform.position = new Vector2(Random.Range(-13f, 1f), Random.Range(-6f, 12f));
         }
 
         if (Input.GetKeyDown(KeyCode.Keypad4))
@@ -85,20 +91,29 @@ public class PlayerMovement : MonoBehaviour
             modeText.text = " Obstacle Avoidance Mode";
             mode = Steering.ObstacleAvoidance;
         }
-        if (Input.GetKeyDown(KeyCode.Keypad5))
+
+
+        if(Input.GetKeyDown(KeyCode.Keypad5))
+        {
+            modeText.text = " Blend Mode";
+        }
+
+
+
+        if (Input.GetKeyDown(KeyCode.Keypad6))
         {
             Debug.Log("pressed 2,Reset Mode");
             modeText.text = " Reset Mode";
             mode = Steering.Reset;
         }
 
-
+        ////////////////////  Seek Mode
         if (mode == Steering.SeekMode)
         {
 
             Seek();
         }
-
+        ////////////////////////// Flee mode
         if (mode == Steering.FleeMode)
         {
 
@@ -121,19 +136,32 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-          //  Enemy.SetActive(false);
+            Enemy.SetActive(false);
         }
-
+        //////////////////// Arrival Mode
         if (mode == Steering.ArrivalMode)
         {
-            //   arrivalText.gameObject.SetActive(true);
-            //   ResetGame();
-            Enemy.gameObject.SetActive(true);
-            Seek();
-            distance = Vector3.Distance(Enemy.transform.position,transform.position);
+           
+
+         
+
+
+
+            Vector2 currentVelocity = playerRigidBody.velocity;
+            Vector2 desiredVelocity = (fishingWorm.transform.position - transform.position).normalized * seekSpeed;
+            Vector2 seekForce = desiredVelocity - currentVelocity;
+
+            playerRigidBody.AddForce(seekForce);
+
+            Vector3 direction = playerRigidBody.velocity;
+            transform.right = direction;
+
+
+            distance = Vector3.Distance(fishingWorm.transform.position,transform.position);
        if(distance<= 2.5f)
             {
                 mode = Steering.Reset;
+                fishingWorm.gameObject.SetActive(false);
             }
             
         }
@@ -142,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
           //  Enemy.gameObject.SetActive(false);
         }
 
-
+        //////////////// Reset Mode
         if(mode == Steering.Reset) 
         {
             
@@ -160,11 +188,11 @@ public class PlayerMovement : MonoBehaviour
 
         void ResetGame()
         {
-            transform.position = new Vector3(10f,0f,0f);
+            transform.position = new Vector3(2f,0f,0f);
             transform.rotation = Quaternion.identity;
-            Enemy.transform.rotation = Quaternion.identity;
+          Enemy.SetActive(false);
             modeText.text = " Reset Mode";
-            Enemy.transform.position=new Vector3(-5f,0f,0f);    
+           
            
         }
     }
