@@ -25,6 +25,6 @@ public class SharkSeek : MonoBehaviour
         sharkRigidBody.AddForce(seekForce);
 
         Vector3 direction = sharkRigidBody.velocity;
-        transform.right = direction;
+        transform.right = -direction;
     }
 }

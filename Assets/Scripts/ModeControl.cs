@@ -19,17 +19,17 @@ public class PlayerMovement : MonoBehaviour
 
     public Steering mode;
     public TMP_Text modeText;
-    public GameObject  arrivalText;
+    
     public GameObject MainMenuButton;
     Rigidbody2D playerRigidBody;
     [SerializeField] float seekSpeed;
     public GameObject Enemy;
+    float distance;
 
     Rigidbody2D enemyRigidBody;
 
     void Start()
     {
-        arrivalText.gameObject.SetActive(false);
 
         Enemy.SetActive(false);
         modeText.text = " Angular Seek";
@@ -37,6 +37,23 @@ public class PlayerMovement : MonoBehaviour
         playerRigidBody = GetComponent<Rigidbody2D>();
     }
 
+
+    void Seek()
+    {
+        Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mouse.z = 0f;
+
+
+
+        Vector2 currentVelocity = playerRigidBody.velocity;
+        Vector2 desiredVelocity = (mouse - transform.position).normalized * seekSpeed;
+        Vector2 seekForce = desiredVelocity - currentVelocity;
+
+        playerRigidBody.AddForce(seekForce);
+
+        Vector3 direction = playerRigidBody.velocity;
+        transform.right = direction;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -79,19 +96,7 @@ public class PlayerMovement : MonoBehaviour
         if (mode == Steering.SeekMode)
         {
 
-            Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mouse.z = 0f;
-
-           
-
-            Vector2 currentVelocity = playerRigidBody.velocity;
-            Vector2 desiredVelocity = (mouse - transform.position).normalized * seekSpeed;
-            Vector2 seekForce = desiredVelocity - currentVelocity;
-
-            playerRigidBody.AddForce(seekForce);
-
-            Vector3 direction = playerRigidBody.velocity;
-            transform.right = direction;
+            Seek();
         }
 
         if (mode == Steering.FleeMode)
@@ -116,17 +121,25 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            Enemy.SetActive(false);
+          //  Enemy.SetActive(false);
         }
 
         if (mode == Steering.ArrivalMode)
         {
-              arrivalText.gameObject.SetActive(true);
-            ResetGame();
+            //   arrivalText.gameObject.SetActive(true);
+            //   ResetGame();
+            Enemy.gameObject.SetActive(true);
+            Seek();
+            distance = Vector3.Distance(Enemy.transform.position,transform.position);
+       if(distance<= 2.5f)
+            {
+                mode = Steering.Reset;
+            }
+            
         }
         else
         {
-            arrivalText.gameObject.SetActive(false);
+          //  Enemy.gameObject.SetActive(false);
         }
 
 
@@ -148,8 +161,9 @@ public class PlayerMovement : MonoBehaviour
         void ResetGame()
         {
             transform.position = new Vector3(10f,0f,0f);
-             
-           
+            transform.rotation = Quaternion.identity;
+            Enemy.transform.rotation = Quaternion.identity;
+            modeText.text = " Reset Mode";
             Enemy.transform.position=new Vector3(-5f,0f,0f);    
            
         }
