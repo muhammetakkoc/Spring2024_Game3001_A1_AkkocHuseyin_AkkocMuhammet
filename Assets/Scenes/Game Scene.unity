@@ -1605,7 +1605,7 @@ MonoBehaviour:
   mode: 0
   modeText: {fileID: 1521891302}
   MainMenuButton: {fileID: 1532474027}
-  seekSpeed: 8
+  seekSpeed: 5
   Enemy: {fileID: 1952434633}
   fishingWorm: {fileID: 786925963}
 --- !u!61 &1322100363
@@ -2106,7 +2106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91ef1f758867b82478128af5f6097649, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharkSpeed: 5
+  sharkSpeed: 2
   smallFish: {fileID: 1322100354}
 --- !u!1 &2140580485
 GameObject:

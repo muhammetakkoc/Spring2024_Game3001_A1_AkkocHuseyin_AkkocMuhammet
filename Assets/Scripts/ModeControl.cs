@@ -41,22 +41,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    void Seek()
-    {
-        Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mouse.z = 0f;
-
-
-
-        Vector2 currentVelocity = playerRigidBody.velocity;
-        Vector2 desiredVelocity = (mouse - transform.position).normalized * seekSpeed;
-        Vector2 seekForce = desiredVelocity - currentVelocity;
-
-        playerRigidBody.AddForce(seekForce);
-
-        Vector3 direction = playerRigidBody.velocity;
-        transform.right = direction;
-    }
+   
     // Update is called once per frame
     void Update()
     {
@@ -139,37 +124,17 @@ public class PlayerMovement : MonoBehaviour
             Enemy.SetActive(false);
         }
         //////////////////// Arrival Mode
+        ///
+
         if (mode == Steering.ArrivalMode)
         {
-           
 
-         
-
+            Arrival();  
 
 
-            Vector2 currentVelocity = playerRigidBody.velocity;
-            Vector2 desiredVelocity = (fishingWorm.transform.position - transform.position).normalized * seekSpeed;
-            Vector2 seekForce = desiredVelocity - currentVelocity;
 
-            playerRigidBody.AddForce(seekForce);
-
-            Vector3 direction = playerRigidBody.velocity;
-            transform.right = direction;
-
-
-            distance = Vector3.Distance(fishingWorm.transform.position,transform.position);
-       if(distance<= 2.5f)
-            {
-                mode = Steering.Reset;
-                fishingWorm.gameObject.SetActive(false);
-            }
-            
+          
         }
-        else
-        {
-          //  Enemy.gameObject.SetActive(false);
-        }
-
         //////////////// Reset Mode
         if(mode == Steering.Reset) 
         {
@@ -195,5 +160,53 @@ public class PlayerMovement : MonoBehaviour
            
            
         }
+    }
+
+
+    void Arrival()
+    {
+        
+            Vector2 targetPosition = fishingWorm.transform.position;
+            Vector2 currentVelocity = playerRigidBody.velocity;
+            Vector2 toTarget = targetPosition - (Vector2)transform.position;
+            float distance = toTarget.magnitude;
+
+            float slowingDistance = 5f; // The distance at which to start slowing down
+            float deceleration = seekSpeed / slowingDistance; // The deceleration factor
+
+            float speed = Mathf.Min(seekSpeed, distance * deceleration);
+            Vector2 desiredVelocity = toTarget.normalized * speed;
+            Vector2 seekForce = desiredVelocity - currentVelocity;
+        modeText.text = " ArrivalMode ,  Speed: " + speed;
+        Debug.Log(speed);
+            playerRigidBody.AddForce(seekForce);
+
+            Vector3 direction = playerRigidBody.velocity;
+            transform.right = direction;
+
+            if (distance <= 0.5f)
+            {
+                mode = Steering.Reset;
+                fishingWorm.gameObject.SetActive(false);
+            }
+        
+    }
+
+
+    void Seek()
+    {
+        Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mouse.z = 0f;
+
+
+
+        Vector2 currentVelocity = playerRigidBody.velocity;
+        Vector2 desiredVelocity = (mouse - transform.position).normalized * seekSpeed;
+        Vector2 seekForce = desiredVelocity - currentVelocity;
+
+        playerRigidBody.AddForce(seekForce);
+
+        Vector3 direction = playerRigidBody.velocity;
+        transform.right = direction;
     }
 }

@@ -1038,9 +1038,12 @@ MonoBehaviour:
 
     3- Arrival Mode
 
-    4- Obstacle Avoidance
+    4- Obstacle Avoidance Mode
 
-    5- Reset
+    5-Blend Mode(Not
+    Completed)
+
+    6-Reset Mode
 
 '
   m_isRightToLeft: 0
